@@ -1,0 +1,12 @@
+*.py[cod]
+__pycache__/
+
+.DS_Store
+.fuse_hidden*
+
+.venv
+.python-version
+
+*.swp
+*.swn
+*.swo

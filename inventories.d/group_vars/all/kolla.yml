@@ -13,25 +13,6 @@ kolla_options:
     base_tag:
       ubuntu: "18.04"
 
-kolla_openstack_tag: "{{ kolla_options[kolla_openstack_release].openstack_tag }}"
-
-kolla_tarballs_base: "{{ kolla_options[kolla_openstack_release].tarballs_base }}"
-
-kolla_projects_dir: "{{ ansible_env.HOME }}/Projects"
-
-kolla_projects_src:
-  - name: cinder-base
-    repo: https://opendev.org/openstack/cinder.git
-    location: "{{ kolla_projects_dir }}/cinder"
-
-  - name: karbor-base
-    repo: https://opendev.org/openstack/karbor.git
-    location: "{{ kolla_projects_dir }}/karbor"
-
-  - name: nova-base
-    repo: https://opendev.org/openstack/nova.git
-    location: "{{ kolla_projects_dir }}/nova"
-
 # Possible values:
 # - binary
 # - source
@@ -44,34 +25,8 @@ kolla_install_type: source
 # - rhel
 kolla_base_distro: ubuntu
 
-kolla_base_tag: "{{ kolla_options[kolla_openstack_release].base_tag[kolla_base_distro] }}"
-
-kolla_profiles:
-  default:
-    - chrony
-    - cinder
-    - cron
-    - kolla-toolbox
-    - fluentd
-    - glance
-    - haproxy
-    - heat
-    - horizon
-    - iscsi
-    - keepalived
-    - keystone
-    - mariadb
-    - memcached
-    - neutron
-    - nova-
-    - placement
-    - openvswitch
-    - rabbitmq
-    - tgtd
-
-kolla_docker_namespace: kolla
-
 kolla_docker_registry: "192.168.0.70:4000"
+kolla_docker_namespace: kolla
 
 kolla_network_interface: macvlan0
 kolla_neutron_external_interface: macvtap0

@@ -1,5 +1,5 @@
 openstack_release: "{{ kolla_openstack_release }}"
-openstack_tag: "{{ kolla_openstack_tag }}"
+openstack_tag: "{{ kolla_options[kolla_openstack_release].openstack_tag }}"
 
 ###############
 # Kolla options
@@ -51,11 +51,7 @@ node_custom_config: "{{ '{{ node_config }}' }}/config"
 docker_registry: "{{ kolla_docker_registry }}"
 docker_registry_insecure: "yes"
 
-# Namespace of images:
 docker_namespace: "{{ kolla_docker_namespace }}"
-
-# Docker client timeout in seconds.
-docker_client_timeout: 120
 
 {% if setup_tls | d("no") == "yes" %}
 

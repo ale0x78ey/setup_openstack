@@ -10,11 +10,6 @@
   with_items: "{{ network_requirements_debian }}"
   when: ansible_os_family == "Debian"
 
-# - import_tasks: configs_debian_nm.yml
-#   become: yes
-#   when: ansible_os_family == "Debian" and
-#         network_manager_type | d("NetworkManager") == "NetworkManager"
-
 - name: setup_kolla_ansible | create /etc/kolla/config/* directories
   file:
     path: "/etc/kolla/config/{{ item }}"

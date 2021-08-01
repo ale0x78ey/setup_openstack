@@ -1,0 +1,53 @@
+- name: setup_kolla_ansible [debian] | update repositories cache
+  apt: update_cache=yes
+  become: yes
+  changed_when: False
+  when: ansible_os_family == "Debian"
+
+- name: setup_kolla_ansible [debian] | install requirements [network]
+  package: name="{{ item }}"
+  become: yes
+  with_items: "{{ network_requirements_debian }}"
+  when: ansible_os_family == "Debian"
+
+# - import_tasks: configs_debian_nm.yml
+#   become: yes
+#   when: ansible_os_family == "Debian" and
+#         network_manager_type | d("NetworkManager") == "NetworkManager"
+
+- name: setup_kolla_ansible | create /etc/kolla/config/* directories
+  file:
+    path: "/etc/kolla/config/{{ item }}"
+    mode: "755"
+    state: directory
+    recurse: yes
+  become: yes
+  with_items:
+    - cinder
+    - glance
+    - karbor/karbor-protection/providers.d
+    - neutron
+    - nova
+
+- name: setup_kolla_ansible | install etc/kolla/*
+  template:
+    src: "etc/kolla/{{ item }}.j2"
+    dest: "/etc/kolla/{{ item }}"
+    mode: "755"
+  become: yes
+  with_items:
+    - config/cinder/cinder-backup.conf
+    - config/cinder/cinder-volume.conf
+    - config/glance/glance-api.conf
+    - config/karbor.conf
+    - config/karbor/karbor-protection/providers.d/noop.conf
+    - config/karbor/karbor-protection/providers.d/openstack-infra.conf
+    - config/karbor/karbor-protection/providers.d/openstack-infra-volume-snapshot.conf
+    - config/neutron/ml2_conf.ini
+    - config/neutron/openvswitch_agent.ini
+    - config/nova/nova-compute.conf
+    - globals.yml
+
+- import_tasks: ceph.yml
+  become: yes
+  when: setup_ceph | d("no") == "yes"

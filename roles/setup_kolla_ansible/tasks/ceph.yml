@@ -1,0 +1,54 @@
+- name: setup_kolla_ansible [debian] | install requirements [ceph]
+  package: name="{{ item }}"
+  with_items: "{{ ceph_requirements_debian }}"
+  when: ansible_os_family == "Debian"
+
+- name: setup_kolla_ansible | create /etc/kolla/config/* directories [ceph]
+  file:
+    path: "/etc/kolla/config/{{ item }}"
+    mode: "755"
+    state: directory
+    recurse: yes
+  with_items:
+    - cinder/cinder-backup
+    - cinder/cinder-volume
+    - glance
+    - nova
+
+- name: setup_kolla_ansible | upload /etc/ceph/ceph.conf [ceph]
+  copy:
+    src: "/etc/ceph/ceph.conf"
+    dest: "/etc/kolla/config/{{ item }}/ceph.conf"
+  with_items:
+    - cinder
+    - glance
+    - nova
+
+- name: setup_kolla_ansible | upload glance keyring [ceph]
+  copy:
+    src: "/etc/ceph/{{ item }}"
+    dest: "/etc/kolla/config/glance/{{ item }}"
+  with_items:
+    - ceph.client.glance.keyring
+
+- name: setup_kolla_ansible | upload cinder-volume keyring [ceph]
+  copy:
+    src: "/etc/ceph/{{ item }}"
+    dest: "/etc/kolla/config/cinder/cinder-volume/{{ item }}"
+  with_items:
+    - ceph.client.cinder.keyring
+
+- name: setup_kolla_ansible | upload cinder-backup keyrings [ceph]
+  copy:
+    src: "/etc/ceph/{{ item }}"
+    dest: "/etc/kolla/config/cinder/cinder-backup/{{ item }}"
+  with_items:
+    - ceph.client.cinder.keyring
+    - ceph.client.cinder-backup.keyring
+
+- name: setup_kolla_ansible | upload nova keyring [ceph]
+  copy:
+    src: "/etc/ceph/{{ item }}"
+    dest: "/etc/kolla/config/nova/{{ item }}"
+  with_items:
+    - ceph.client.cinder.keyring

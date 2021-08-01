@@ -1,0 +1,21 @@
+[DEFAULT]
+
+# To enable copy-on-write cloning of images set up True.
+show_image_direct_url = True
+
+[glance_store]
+
+{% if setup_ceph | d("no") == "yes" %}
+stores = rbd
+default_store = rbd
+rbd_store_pool = images
+rbd_store_user = glance
+rbd_store_ceph_conf = /etc/ceph/ceph.conf
+{% endif %}
+
+[paste_deploy]
+
+# To sisable the Glance cache management to avoid
+# images getting cached under /var/lib/glance/image-cache/
+# set up keystone only.
+flavor = keystone

@@ -1,0 +1,2 @@
+files/etc/kolla/passwords.yml
+*.keyring

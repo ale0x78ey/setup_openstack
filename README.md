@@ -1,4 +1,4 @@
-# Setup kolla-ansible
+# Setup OpenStack
 
 ## Install
 
@@ -16,5 +16,7 @@ ansible-playbook -i inventories.d/libvirt \
 
 pip install -r requirements.txt
 export ANSIBLE_TRANSFORM_INVALID_GROUP_CHARS='ignore'
-ansible-playbook -i inventories.d/kolla setup_kolla.yml
+ansible-playbook -i inventories.d/openstack \
+                 -e setup_ceph=yes \
+                 setup_openstack.yml
 ```

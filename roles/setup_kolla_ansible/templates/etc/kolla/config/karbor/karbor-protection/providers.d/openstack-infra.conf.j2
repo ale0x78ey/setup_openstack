@@ -1,0 +1,36 @@
+[provider]
+name = OS Infra Provider.
+description = This provider uses OpenStack's own services as storage.
+id = {{ '{{ karbor_openstack_infra_id }}' }}
+
+plugin=karbor-volume-protection-plugin
+plugin=karbor-server-protection-plugin
+plugin=karbor-network-protection-plugin
+
+{% if setup_ceph | d("no") == "yes" %}
+bank=karbor-s3-bank-plugin
+{% else %}
+bank=karbor-fs-bank-plugin
+{% endif %}
+
+enabled=True
+
+[cinder_backup_protection_plugin]
+backup_from_snapshot=True
+
+{% if setup_ceph | d("no") == "yes" %}
+[s3_client]
+s3_endpoint={{ karbor_s3_url }}
+s3_access_key={{ karbor_access_key }}
+s3_secret_key={{ karbor_secret_key }}
+
+[s3_bank_plugin]
+lease_expire_window=600
+lease_renew_window=120
+lease_validity_window=100
+bank_s3_object_bucket=karbor-dc2bc656-bb2e-4438-9bd3-001fe904ac40
+bank_s3_lease_bucket=karbor-59512027-3ea8-40ce-9831-5894b19b8818
+{% else %}
+[file_system_bank_plugin]
+file_system_bank_path=/var/lib/karbor/karbor_fs_bank
+{% endif %}

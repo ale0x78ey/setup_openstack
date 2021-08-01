@@ -1,0 +1,6 @@
+network_requirements_debian:
+  - iproute2
+
+ceph_requirements_debian:
+  - ceph-common
+  - python3-rbd

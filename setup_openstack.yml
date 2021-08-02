@@ -9,6 +9,6 @@
     - setup_kolla_build
 
 - name: MyEnv | setup_openstack | setup_node
-  hosts: openstack
+  hosts: "openstack{{ project_name | d('') }}"
   roles:
     - setup_node

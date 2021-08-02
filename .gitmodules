@@ -1,3 +1,6 @@
 [submodule "roles/setup_libvirt"]
 	path = roles/setup_libvirt
 	url = https://github.com/ale0x78ey/setup_libvirt.git
+[submodule "roles/setup_docker"]
+	path = roles/setup_docker
+	url = https://github.com/ale0x78ey/setup_docker.git

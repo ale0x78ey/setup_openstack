@@ -1,0 +1,7 @@
+ceph_requirements_debian:
+  - ceph-common
+  - python3-rbd
+
+openstack_requirements_debian:
+  - qemu
+  - qemu-kvm

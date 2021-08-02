@@ -1,0 +1,7 @@
+- name: setup_kolla_build | download kolla sources
+  git:
+    repo: "{{ kolla_repo }}"
+    dest: "{{ kolla_sources_dir }}/kolla"
+    accept_hostkey: True
+    update: no
+  ignore_errors: yes

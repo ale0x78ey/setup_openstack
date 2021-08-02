@@ -1,0 +1,27 @@
+- name: setup_kolla_build [debian] | update repositories cache
+  apt: update_cache=yes
+  become: yes
+  changed_when: False
+  when: ansible_os_family == "Debian"
+
+- name: setup_kolla_build [debian] | install requirements
+  package: name="{{ item }}"
+  become: yes
+  with_items: "{{ system_requirements_debian }}"
+  when: ansible_os_family == "Debian"
+
+- name: setup_kolla_build | create /etc/kolla directory
+  file:
+    path: "/etc/kolla"
+    mode: "755"
+    state: directory
+  become: yes
+
+- name: setup_kolla_build | install etc/kolla/kolla-build.conf
+  template:
+    src: "etc/kolla/kolla-build.conf.j2"
+    dest: "/etc/kolla/kolla-build.conf"
+    mode: "755"
+  become: yes
+
+- import_tasks: sources.yml

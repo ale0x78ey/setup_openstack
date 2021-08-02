@@ -1,0 +1,18 @@
+- name: setup_node [debian] | update repositories cache
+  apt: update_cache=yes
+  become: yes
+  changed_when: False
+  when: ansible_os_family == "Debian"
+
+- name: setup_node [debian] | install requirements [openstack]
+  package: name="{{ item }}"
+  become: yes
+  with_items: "{{ openstack_requirements_debian }}"
+  when: ansible_os_family == "Debian"
+
+- name: setup_node [debian] | install requirements [ceph]
+  package: name="{{ item }}"
+  become: yes
+  with_items: "{{ ceph_requirements_debian }}"
+  when: ansible_os_family == "Debian" and
+        setup_ceph | d("no") == "yes"

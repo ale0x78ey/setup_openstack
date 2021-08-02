@@ -1,3 +1,5 @@
 localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
 
 deploy ansible_host=192.168.0.71
+build ansible_host=192.168.0.72
+openstack ansible_host=192.168.0.73

@@ -1,0 +1,7 @@
+- name: setup_kolla_ansible | download kolla-ansible sources
+  git:
+    repo: "{{ kolla_ansible_repo }}"
+    dest: "{{ kolla_sources_dir }}/kolla-ansible"
+    accept_hostkey: True
+    update: no
+  ignore_errors: yes

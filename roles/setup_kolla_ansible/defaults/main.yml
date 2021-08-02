@@ -1,6 +1,9 @@
-network_requirements_debian:
+system_requirements_debian:
   - iproute2
+  - python3-venv
 
 ceph_requirements_debian:
   - ceph-common
   - python3-rbd
+
+kolla_ansible_repo: "https://opendev.org/openstack/kolla-ansible.git"

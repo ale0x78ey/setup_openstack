@@ -1,10 +1,14 @@
-# - name: MyEnv | setup_openstack | setup_docker
-#   hosts: '{{ myenv_docker_registry_hostname }}'
-#   roles:
-#     - role: setup_docker
-#       setup_docker_registries: "yes"
-
 - name: MyEnv | setup_openstack | setup_kolla_ansible
   hosts: deploy
   roles:
     - setup_kolla_ansible
+
+- name: MyEnv | setup_openstack | setup_kolla_build
+  hosts: build
+  roles:
+    - setup_kolla_build
+
+- name: MyEnv | setup_openstack | setup_node
+  hosts: openstack
+  roles:
+    - setup_node

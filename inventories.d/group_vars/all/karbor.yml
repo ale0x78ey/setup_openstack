@@ -1,3 +1,0 @@
-karbor_access_key: "{{ lookup('file', ansible_env.HOME + '/.rgw/aws_access_key') }}"
-karbor_secret_key: "{{ lookup('file', ansible_env.HOME + '/.rgw/aws_secret_key') }}"
-karbor_s3_url: "http://192.168.0.70:7480"

@@ -1,0 +1,5 @@
+system_requirements_debian:
+  - iproute2
+  - python3-venv
+
+kolla_repo: "https://opendev.org/openstack/kolla.git"

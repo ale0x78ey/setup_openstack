@@ -1,0 +1,4 @@
+- name: MyEnv | setup_openstack | setup_libvirt
+  hosts: localhost
+  roles:
+    - setup_libvirt

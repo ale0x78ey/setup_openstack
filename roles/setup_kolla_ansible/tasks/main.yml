@@ -4,10 +4,10 @@
   changed_when: False
   when: ansible_os_family == "Debian"
 
-- name: setup_kolla_ansible [debian] | install requirements [network]
+- name: setup_kolla_ansible [debian] | install requirements
   package: name="{{ item }}"
   become: yes
-  with_items: "{{ network_requirements_debian }}"
+  with_items: "{{ system_requirements_debian }}"
   when: ansible_os_family == "Debian"
 
 - name: setup_kolla_ansible | create /etc/kolla/config/* directories
@@ -42,7 +42,10 @@
     - config/neutron/openvswitch_agent.ini
     - config/nova/nova-compute.conf
     - globals.yml
+    - hosts
 
 - import_tasks: ceph.yml
   become: yes
   when: setup_ceph | d("no") == "yes"
+
+- import_tasks: sources.yml

@@ -19,6 +19,7 @@
   copy:
     src: "/etc/ceph/ceph.conf"
     dest: "/etc/kolla/config/{{ item }}/ceph.conf"
+    mode: "744"
   with_items:
     - cinder
     - glance
@@ -28,6 +29,7 @@
   copy:
     src: "/etc/ceph/{{ item }}"
     dest: "/etc/kolla/config/glance/{{ item }}"
+    mode: "744"
   with_items:
     - ceph.client.glance.keyring
 
@@ -35,6 +37,7 @@
   copy:
     src: "/etc/ceph/{{ item }}"
     dest: "/etc/kolla/config/cinder/cinder-volume/{{ item }}"
+    mode: "744"
   with_items:
     - ceph.client.cinder.keyring
 
@@ -42,13 +45,16 @@
   copy:
     src: "/etc/ceph/{{ item }}"
     dest: "/etc/kolla/config/cinder/cinder-backup/{{ item }}"
+    mode: "744"
   with_items:
     - ceph.client.cinder.keyring
     - ceph.client.cinder-backup.keyring
 
 - name: setup_kolla_ansible | upload nova keyring [ceph]
   copy:
-    src: "/etc/ceph/{{ item }}"
-    dest: "/etc/kolla/config/nova/{{ item }}"
-  with_items:
-    - ceph.client.cinder.keyring
+    src: "/etc/ceph/{{ item[0] }}"
+    dest: "/etc/kolla/config/nova/{{ item[1] }}"
+    mode: "744"
+  with_nested:
+    - [ ceph.client.cinder.keyring ]
+    - [ ceph.client.cinder.keyring, ceph.client.nova.keyring ]

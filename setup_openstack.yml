@@ -6,6 +6,7 @@
 - name: MyEnv | setup_openstack | setup_kolla_build
   hosts: build
   roles:
+    - setup_docker
     - setup_kolla_build
 
 - name: MyEnv | setup_openstack | setup_node

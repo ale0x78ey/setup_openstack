@@ -5,6 +5,15 @@ project_options:
 
 openstack_host: "openstack{{ project_name | d('') }}"
 
+#########
+# Docker
+#########
+
+docker_registry: "192.168.0.70:4000"
+
+docker_apt_repo: "deb https://download.docker.com/linux/ubuntu focal stable"
+docker_gpg_key: https://download.docker.com/linux/ubuntu/gpg
+
 ########
 # Kolla
 ########
@@ -36,10 +45,10 @@ kolla_install_type: source
 # - rhel
 kolla_base_distro: ubuntu
 
-kolla_docker_registry: "192.168.0.70:4000"
-kolla_docker_namespace: kolla
-
 kolla_sources_dir: "{{ ansible_env.HOME }}/Projects"
+
+# The Docker namespace name where images are placed.
+kolla_docker_namespace: kolla
 
 kolla_profiles:
   default:
@@ -85,7 +94,7 @@ libvirt_images:
     hostname: deploy
     users:
       - name: "{{ ansible_env.USER }}"
-        public_key: "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
         groups:
           - sudo
     image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
@@ -95,7 +104,7 @@ libvirt_images:
     hostname: build
     users:
       - name: "{{ ansible_env.USER }}"
-        public_key: "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
         groups:
           - sudo
     image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
@@ -105,7 +114,7 @@ libvirt_images:
     hostname: "{{ openstack_host }}"
     users:
       - name: "{{ ansible_env.USER }}"
-        public_key: "{{ ansible_env.HOME }}/.ssh/id_rsa.pub"
+        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
         groups:
           - sudo
     image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"

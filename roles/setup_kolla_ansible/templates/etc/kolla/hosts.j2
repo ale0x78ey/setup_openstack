@@ -1,4 +1,4 @@
-localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3" become=true
+localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
 
 {{ openstack_host }} ansible_host="{{ hostvars[openstack_host].ansible_host }}"
 

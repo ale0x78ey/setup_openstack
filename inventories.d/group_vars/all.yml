@@ -89,39 +89,80 @@ karbor_s3_url: "http://192.168.0.70:7480"
 # Libvirt
 ##########
 
-libvirt_images:
-  - name: kolla-ansible
-    hostname: deploy
-    users:
-      - name: "{{ ansible_env.USER }}"
-        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
-        groups:
-          - sudo
-    image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
-    image_dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
-
-  - name: kolla-build
-    hostname: build
-    users:
-      - name: "{{ ansible_env.USER }}"
-        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
-        groups:
-          - sudo
-    image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
-    image_dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
-
-  - name: "{{ openstack_host }}"
-    hostname: "{{ openstack_host }}"
-    users:
-      - name: "{{ ansible_env.USER }}"
-        public_key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
-        groups:
-          - sudo
-    image_src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
-    image_dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
-
 libvirt_access_key: "{{ lookup('file', ansible_env.HOME + '/.aws/aws_access_key') }}"
 libvirt_secret_key: "{{ lookup('file', ansible_env.HOME + '/.aws/aws_secret_key') }}"
 libvirt_s3_url: "https://storage.yandexcloud.net"
 libvirt_region: "ru-central1"
 libvirt_bucket: "bf084dfb-eeb9-4b82-9a43-9e1b77e6fa10"
+
+libvirt_images:
+  - name: kolla-ansible
+    hostname: deploy
+    s3_resources:
+      - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
+        dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+
+    cloud_init: |
+      users:
+        - name: "{{ ansible_env.USER }}"
+          ssh-authorized-keys:
+            - "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
+          sudo: ['ALL=(ALL) NOPASSWD:ALL']
+          groups: sudo
+          shell: /bin/bash
+
+      runcmd:
+        - echo "AllowUsers {{ ansible_env.USER }}" >> /etc/ssh/sshd_config
+        - systemctl restart ssh
+
+  - name: kolla-build
+    hostname: build
+    s3_resources:
+      - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
+        dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+
+    cloud_init: |
+      users:
+        - name: "{{ ansible_env.USER }}"
+          ssh-authorized-keys:
+            - "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
+          sudo: ['ALL=(ALL) NOPASSWD:ALL']
+          groups: sudo
+          shell: /bin/bash
+
+      runcmd:
+        - echo "AllowUsers {{ ansible_env.USER }}" >> /etc/ssh/sshd_config
+        - systemctl restart ssh
+
+  - name: "{{ openstack_host }}"
+    hostname: "{{ openstack_host }}"
+    s3_resources:
+      - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
+        dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+
+    cloud_init: |
+      system_info:
+        network:
+          ethernets:
+            enp1s0:
+              dhcp4: true
+              match:
+                macaddress: 52:54:00:36:4e:b6
+              set-name: enp1s0
+            enp2s0:
+              dhcp4: false
+              match:
+                macaddress: 52:54:00:1a:bd:7f
+              set-name: enp2s0
+
+      users:
+        - name: "{{ ansible_env.USER }}"
+          ssh-authorized-keys:
+            - "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
+          sudo: ['ALL=(ALL) NOPASSWD:ALL']
+          groups: sudo
+          shell: /bin/bash
+
+      runcmd:
+        - echo "AllowUsers {{ ansible_env.USER }}" >> /etc/ssh/sshd_config
+        - systemctl restart ssh

@@ -1,15 +1,24 @@
+- name: MyEnv | setup_openstack | setup_libvirt
+  tags: libvirt
+  hosts: localhost
+  roles:
+    - setup_libvirt
+
 - name: MyEnv | setup_openstack | setup_kolla_ansible
+  tags: [deploy, openstack]
   hosts: deploy
   roles:
     - setup_kolla_ansible
 
 - name: MyEnv | setup_openstack | setup_kolla_build
+  tags: [build, openstack]
   hosts: build
   roles:
     - setup_docker
     - setup_kolla_build
 
 - name: MyEnv | setup_openstack | setup_node
+  tags: [node, openstack]
   hosts: "openstack{{ project_name | d('') }}"
   roles:
     - setup_node

@@ -42,3 +42,10 @@ openstack_release = {{ kolla_openstack_release }}
 [profiles]
 
 default = {{ kolla_profiles['default'] | join(',') }}
+
+{% for s in kolla_local_src %}
+[{{s.name}}]
+type = local
+location = {{ s.path }}
+
+{% endfor %}

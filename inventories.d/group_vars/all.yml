@@ -6,7 +6,7 @@ project_options:
     kolla_internal_vip_address: "192.168.0.12"
     kolla_external_vip_address: "192.168.0.13"
 
-openstack_host: "openstack{{ project_name | d('') }}"
+openstack_host: "openstack{{ '-' + project_name if project_name | d('') != '' else '' }}"
 
 #########
 # Docker
@@ -112,6 +112,16 @@ libvirt_images:
     s3_resources:
       - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
         dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+      - src: "_var/lib/libvirt/images/kolla-ansible/meta-data"
+        dst: "/var/lib/libvirt/images/kolla-ansible/meta-data"
+      - src: "_var/lib/libvirt/images/kolla-ansible/user-data"
+        dst: "/var/lib/libvirt/images/kolla-ansible/user-data"
+      - src: "_var/lib/libvirt/images/kolla-ansible/kolla-ansible-cidata.iso"
+        dst: "/var/lib/libvirt/images/kolla-ansible/kolla-ansible-cidata.iso"
+      - src: "_var/lib/libvirt/images/kolla-ansible/kolla-ansible.qcow2"
+        dst: "/var/lib/libvirt/images/kolla-ansible/kolla-ansible.qcow2"
+      - src: "_var/lib/libvirt/images/kolla-ansible/kolla-ansible.xml"
+        dst: "/var/lib/libvirt/images/kolla-ansible/kolla-ansible.xml"
 
     cloud_init: |
       users:
@@ -131,6 +141,16 @@ libvirt_images:
     s3_resources:
       - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
         dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+      - src: "_var/lib/libvirt/images/kolla-build/meta-data"
+        dst: "/var/lib/libvirt/images/kolla-build/meta-data"
+      - src: "_var/lib/libvirt/images/kolla-build/user-data"
+        dst: "/var/lib/libvirt/images/kolla-build/user-data"
+      - src: "_var/lib/libvirt/images/kolla-build/kolla-build-cidata.iso"
+        dst: "/var/lib/libvirt/images/kolla-build/kolla-build-cidata.iso"
+      - src: "_var/lib/libvirt/images/kolla-build/kolla-build.qcow2"
+        dst: "/var/lib/libvirt/images/kolla-build/kolla-build.qcow2"
+      - src: "_var/lib/libvirt/images/kolla-build/kolla-build.xml"
+        dst: "/var/lib/libvirt/images/kolla-build/kolla-build.xml"
 
     cloud_init: |
       users:
@@ -150,6 +170,16 @@ libvirt_images:
     s3_resources:
       - src: "cloud-images.ubuntu.com/focal/20210720/focal-server-cloudimg-amd64.img"
         dst: "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
+      - src: "_var/lib/libvirt/images/{{ openstack_host }}/meta-data"
+        dst: "/var/lib/libvirt/images/{{ openstack_host }}/meta-data"
+      - src: "_var/lib/libvirt/images/{{ openstack_host }}/user-data"
+        dst: "/var/lib/libvirt/images/{{ openstack_host }}/user-data"
+      - src: "_var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}-cidata.iso"
+        dst: "/var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}-cidata.iso"
+      - src: "_var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}.qcow2"
+        dst: "/var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}.qcow2"
+      - src: "_var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}.xml"
+        dst: "/var/lib/libvirt/images/{{ openstack_host }}/{{ openstack_host }}.xml"
 
     cloud_init: |
       system_info:
@@ -157,14 +187,8 @@ libvirt_images:
           ethernets:
             enp1s0:
               dhcp4: true
-              match:
-                macaddress: 52:54:00:36:4e:b6
-              set-name: enp1s0
             enp2s0:
               dhcp4: false
-              match:
-                macaddress: 52:54:00:1a:bd:7f
-              set-name: enp2s0
 
       users:
         - name: "{{ ansible_env.USER }}"

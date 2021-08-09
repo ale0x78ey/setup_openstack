@@ -10,10 +10,6 @@ pip install -U wheel
 git submodule update --init
 . setup.sh
 
-ansible-playbook -i inventories.d/ setup_libvirt.yml
-# ...
-
-ansible-playbook -i inventories.d/openstack \
-                 -e setup_ceph=yes \
-                 setup_openstack.yml
+ansible-playbook setup_openstack.yml -i inventories.d/ \
+  -e 'setup_ceph=yes openstack_release=victoria project_name=victoria' \
 ```

@@ -19,6 +19,6 @@
 
 - name: MyEnv | setup_openstack | setup_node
   tags: [node, openstack]
-  hosts: "openstack{{ project_name | d('') }}"
+  hosts: "openstack{{ '-' + project_name if project_name | d('') != '' else '' }}"
   roles:
     - setup_node

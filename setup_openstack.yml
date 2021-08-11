@@ -4,6 +4,16 @@
   roles:
     - setup_libvirt
 
+- name: MyEnv | setup_openstack | wait for target connection to become reachable/usable
+  vars:
+    openstack: "openstack{{'-' + project_name if project_name | d('') != '' else 'home'}}"
+  hosts: deploy:build:{{ openstack }}
+  gather_facts: no
+  tasks:
+    - wait_for_connection:
+        delay: 5
+        timeout: 15
+
 - name: MyEnv | setup_openstack | setup_kolla_ansible
   tags: [deploy, openstack]
   hosts: deploy

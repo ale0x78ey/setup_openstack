@@ -1,6 +1,12 @@
 localhost ansible_connection=local ansible_python_interpreter="/usr/bin/env python3"
 
+[kolla_ansible]
 deploy ansible_host=192.168.0.71
+
+[kolla_build]
 build ansible_host=192.168.0.72
-openstack ansible_host=192.168.0.73
+
+[openstack]
+openstack-train ansible_host=192.168.0.73
 openstack-victoria ansible_host=192.168.0.74
+openstack-home ansible_host=192.168.0.75

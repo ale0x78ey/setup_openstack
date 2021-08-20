@@ -78,6 +78,7 @@ kolla_profiles:
     - neutron
     - nova-
     - placement
+    - octavia
     - openvswitch
     - rabbitmq
     - tgtd

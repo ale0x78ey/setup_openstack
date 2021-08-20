@@ -23,6 +23,7 @@
     - karbor/karbor-protection/providers.d
     - neutron
     - nova
+    - octavia
 
 - name: setup_kolla_ansible | install etc/kolla/*
   template:

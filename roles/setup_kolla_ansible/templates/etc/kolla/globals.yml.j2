@@ -1,9 +1,9 @@
 openstack_release: "{{ kolla_openstack_release }}"
 openstack_tag: "{{ kolla_options[kolla_openstack_release].openstack_tag }}"
 
-###############
+################
 # Kolla options
-###############
+################
 
 # Possible values:
 # - COPY_ONCE
@@ -43,9 +43,9 @@ kolla_external_vip_address: "{{ project_options[openstack_host].kolla_external_v
 node_config: /etc/kolla
 node_custom_config: "{{ '{{ node_config }}' }}/config"
 
-################
+#################
 # Docker options
-################
+#################
 
 # Custom docker registry settings:
 docker_registry: "{{ docker_registry }}"
@@ -55,9 +55,9 @@ docker_namespace: "{{ kolla_docker_namespace }}"
 
 {% if setup_tls | d("no") == "yes" %}
 
-#############
+##############
 # TLS options
-#############
+##############
 
 kolla_certificates_dir: "{{ '{{ node_config }}' }}/certificates"
 
@@ -83,9 +83,9 @@ haproxy_backend_cacert: ca-certificates.crt
 openstack_cacert: /etc/ssl/certs/ca-certificates.crt
 {% endif %}
 
-##############################
+###############################
 # Neutron - Networking Options
-##############################
+###############################
 
 # This interface is what all your api services will be bound to by default.
 # Additionally, all vxlan/tunnel and storage network traffic will go over this
@@ -103,6 +103,8 @@ network_interface: "{{ kolla_network_interface }}"
 # configurations. It is recommended this interface not be configured with any IP
 # addresses for that reason.
 neutron_external_interface: "{{ kolla_neutron_external_interface }}"
+
+enable_openvswitch: "yes"
 
 # Possible values:
 # - openvswitch
@@ -126,16 +128,28 @@ neutron_ipam_driver: "internal"
 # Neutron rolling upgrade were enable by default
 neutron_enable_rolling_upgrade: "yes"
 
-################
+# Provider networks allow to connect compute instances directly to
+# physical networks avoiding tunnels. This is necessary for example for
+# some performance critical applications. Only administrators of OpenStack
+# can create such networks.
+#
+# For provider networks compute hosts must have external bridge created
+# and configured by Ansible tasks like it is already done for tenant DVR
+# mode networking. Normal tenant non-DVR networking does not need external
+# bridge on compute hosts and therefore operators don’t need additional
+# dedicated network interface.
+enable_neutron_provider_networks: "yes"
+
+#################
 # Region options
-################
+#################
 
 # Use this option to change the name of this region.
 openstack_region_name: "HOME-1"
 
-###################
+####################
 # OpenStack options
-###################
+####################
 
 # Possible values:
 # - True
@@ -152,11 +166,18 @@ enable_horizon_karbor: "no"
 enable_cinder: "yes"
 enable_cinder_backup: "yes"
 
-enable_freezer: "no"
+enable_octavia: "yes"
 
-#######################
+##################
+# Octavia options
+##################
+
+# If using a VLAN for the Octavia management network, enable Neutron provider
+# networks (see enable_neutron_provider_networks).
+
+########################
 # External Ceph options
-#######################
+########################
 
 # External Ceph - cephx auth enabled (this is the standard nowadays, defaults to yes)
 external_ceph_cephx_enabled: "yes"
@@ -180,24 +201,24 @@ ceph_nova_keyring: "ceph.client.cinder.keyring"
 ceph_nova_user: "cinder"
 ceph_nova_pool_name: "vms"
 
-#############################
+##############################
 # Keystone - Identity Options
-#############################
+##############################
 
 keystone_admin_user: "admin"
 keystone_admin_project: "admin"
 
-########################
+#########################
 # Glance - Image Options
-########################
+#########################
 
 # Configure image backend.
 glance_backend_ceph: "yes"
 glance_backend_file: "no"
 
-################################
+#################################
 # Cinder - Block Storage Options
-################################
+#################################
 
 # Enable / disable Cinder backends
 cinder_backend_ceph: "yes"
@@ -208,9 +229,9 @@ cinder_backend_ceph: "yes"
 # - ceph
 cinder_backup_driver: "ceph"
 
-########################
+#########################
 # Nova - Compute Options
-########################
+#########################
 
 nova_backend_ceph: "yes"
 
